@@ -1,6 +1,6 @@
 clc;clear;
 % State initialization
-N = 10000;
+N = 1000;
 x = zeros(N, 1);
 y = zeros(N, 1);
 h = zeros(N, 1);
@@ -18,7 +18,7 @@ Drag = zeros(N,1);
 x(1) = 0;
 y(1) = 0;
 h(1) = 27000; % ft
-Vtas(1) = climb_speed_schedule(h(1))*0.514444444; % m/s
+Vtas(1) = climb_speed_schedule(h(1))*0.5144 % m/s
 heading(1) = 0;
 mass(1) = 290.3*10^3;
 
@@ -31,6 +31,7 @@ C_T_deslow = .10131;
 
 % Phase 1: Climb from 27,000 ft to 33,000 ft
 tic;
+display(t(i))
 while true
     bank(i)=0;
     gamma(i)=2.1 ;% deg
@@ -71,6 +72,7 @@ end
 % Cruise Flight for 3 min
 t(i+1) = t(i) + dt;
 i=i+1;
+display(t(i))
 for j=i:i+1801
     gamma(i)=0;
     bank(i)=0;
@@ -105,6 +107,7 @@ for j=i:i+1801
 end 
 %Turn 20 degrees
 i=i-1;
+display(t(i))
 while true
     bank(i)=20;
     gamma(i)=0;
@@ -147,6 +150,7 @@ end
 % Cruise Flight for 2 min
 t(i+1) = t(i) + dt;
 i=i+1;
+display(t(i))
 for j=i:i+1201
     gamma(i)=0;
     bank(i)=0;
@@ -180,13 +184,14 @@ for j=i:i+1201
 end
 % Phase: Descent from 33,000 ft to 30,000 ft
 i=i-1;
+display(t(i))
 while true
     bank(i)=0;
     y(i)=0;
     gamma(i)=-2.8;% deg
     heading(i)=0;
     % Calculate Atmosphere
-    [T,P,rho,a]=atm_model(h(i),0);
+    [T,P,rho,a]=atm_model(h(i)*0.3048,0);
     cas=Tas_to_Cas(Vtas(i),h(i)*0.3048);
     % Calculate Lift Coefficient
     Cl = cl_calc(h(i)*0.3048,cas,bank(i),mass(i));
@@ -199,6 +204,7 @@ while true
     
     % Calculate Thrust
     Thrust(i) = descent_thrust(h(i));
+%     Thrust(i) = maxclimb_takeoff_thrust(h(i)*0.3048)*0.10131;
     
     % Calculate Fuel Flow
     F = descent_fuel_consumption(h(i));
@@ -210,7 +216,7 @@ while true
     x(i+1)=x(i)+(Vtas(i)*cosd(0)*cosd(gamma(i)))*dt;
     
     % Break condition
-    if abs(h(i+1) - 30000) < 10
+    if abs(h(i+1) - 30000) < 10 
         break
     else
         t(i+1) = t(i) + dt;
@@ -221,6 +227,7 @@ end
 t(i+1) = t(i) + dt;
 %i=i+1;
 %Loiter 360
+display(t(i))
 while true
     bank(i)=30;%Change
     gamma(i)=0;
@@ -259,6 +266,7 @@ while true
 end 
 t(i+1) = t(i) + dt;
 i=i+1;
+display(t(i))
 % Phase: Descent from 30,000 ft to 26,000 ft
 while true
     bank(i)=0;
@@ -300,7 +308,7 @@ while true
     
 end
 
-
+display(t(i))
 toc;
 t(i+1) = t(i) + dt;
 i=i+1;
