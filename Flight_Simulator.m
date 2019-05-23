@@ -308,13 +308,13 @@ y(i)=y(i-1);
 t=t./60; %Converting seconds to minutes
 
 %Constructing graphics needed
-figure;plot(t,Vtas,'color','b');ylabel("V_tas(m/s)");xlabel("time(min)");grid on;title("\fontsize{14}V_t_a_s-Time Graph",'Interpreter', 'tex');
+figure;plot(t,Vtas,'color','b');ylabel("V_tas(m/s)");xlabel("time(min)");grid on;title("\fontsize{14}V_{tas}-Time Graph",'Interpreter', 'tex');
 figure;plot(t(1:length(t)-1),heading,'color','m');ylabel("Heading Angle(deg)");xlabel("time(min)");grid on;title("\fontsize{14}Heading Angle-Time Graph");
 figure;plot(t,mass,'color','m');ylabel("mass(kg)");xlabel("time(min)");grid on;title("\fontsize{14}Mass-Time Graph");
 figure;plot(t(1:length(t)-1),Thrust,'color','m');ylabel("Thrust(N)");xlabel("time(min)");grid on;title("\fontsize{14}Thrust-Time Graph");
 figure;plot(t(1:length(t)-1),gamma,'color','m');ylabel("Flight Path Angle (deg)");xlabel("time(min)");grid on;title("\fontsize{14}Flight Path Angle-Time Graph");
-figure;plot(t(1:length(t)-1),bank,'color','m');ylabel("Bank Angle (deg)");xlabel("time(min)");grid on;title("\fontsize{14}Bank Angle-Time Graph");
-plot3(x,y,h,'o-','color','r')
+figure;plot(t(1:length(t)-1),bank);ylabel("Bank Angle(deg)");xlabel("time(min)");grid on;title("\fontsize{14}Bank Angle-Time Graph");
+figure;plot3(x,y,h,'o-','color','r')
 grid on
 xlabel('x_1(meters)','Interpreter', 'tex')
 ylabel('x_2(meters)','Interpreter', 'tex')
