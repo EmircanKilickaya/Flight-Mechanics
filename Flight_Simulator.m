@@ -111,7 +111,6 @@ display(t(i))
 while true
     bank(i)=20;
     gamma(i)=0;
-    y(i)=0;
     [T,P,rho,a]=atm_model(h(i)*0.3048,0);
     cas=Tas_to_Cas(Vtas(i),h(i)*0.3048);
     
@@ -134,7 +133,7 @@ while true
     Vtas(i+1) =  Vtas(i) + ((Thrust(i)-Drag(i))/(mass(i)) - 9.81 * sind(gamma(i))) * dt;
     h(i+1) = h(i);
     mass(i+1) = mass(i) - (F/60) * dt;
-    x(i+1)=x(i)+(Vtas(i)*cosd(0)*cosd(gamma(i)))*dt;
+    x(i+1)=x(i)+(Vtas(i)*cosd(heading(i))*cosd(gamma(i)))*dt;
     %heading(i + 1) = heading(i) +((9.81*(((1/cosd(bank(i))^2)-1))^0.5)/(Vtas(i)))*dt;
     heading(i+1)=heading(i)-((Cl*rho*0.5*S*Vtas(i))/mass(i))*sind(bank(i))*57.3*dt;
     %xx=(9.81/Vtas(i))*tand(bank(i));
@@ -154,8 +153,8 @@ display(t(i))
 for j=i:i+1201
     gamma(i)=0;
     bank(i)=0;
-    heading(i)=0;
-    y(i)=0;
+    heading(i+1)=heading(i);
+    y(i+1)=y(i)+(Vtas(i)*sind(heading(i))*cosd(gamma(i)))*dt;
     [T,P,rho,a]=atm_model(h(i)*0.3048,0);
     cas=Tas_to_Cas(Vtas(i),h(i)*0.3048);
     
@@ -177,7 +176,7 @@ for j=i:i+1201
     Vtas(i+1) =  Vtas(i) + ((Thrust(i)-Drag(i))/(mass(i)) - 9.81 * sind(gamma(i))) * dt;
     h(i+1) = h(i) + (Vtas(i) * (sind(gamma(i)) / 0.3048)) * dt;
     mass(i+1) = mass(i) - (F/60) * dt;
-    x(i+1)=x(i)+(Vtas(i)*cosd(0)*cosd(gamma(i)))*dt;
+    x(i+1)=x(i)+(Vtas(i)*cosd(heading(i))*cosd(gamma(i)))*dt;
     
     t(i+1) = t(i) + dt;
     i=i+1;
@@ -187,9 +186,8 @@ i=i-1;
 display(t(i))
 while true
     bank(i)=0;
-    y(i)=0;
     gamma(i)=-2.8;% deg
-    heading(i)=0;
+    heading(i+1)=heading(i);
     % Calculate Atmosphere
     [T,P,rho,a]=atm_model(h(i)*0.3048,0);
     cas=Tas_to_Cas(Vtas(i),h(i)*0.3048);
@@ -213,7 +211,8 @@ while true
     Vtas(i+1) =  Vtas(i) + ((Thrust(i)-Drag(i))/(mass(i)) - 9.81 * sind(gamma(i))) * dt;
     h(i+1) = h(i) + (Vtas(i) * (sind(gamma(i)) / 0.3048)) * dt;
     mass(i+1) = mass(i) - (F/60) * dt;
-    x(i+1)=x(i)+(Vtas(i)*cosd(0)*cosd(gamma(i)))*dt;
+    x(i+1)=x(i)+(Vtas(i)*cosd(heading(i))*cosd(gamma(i)))*dt;
+    y(i+1)=y(i)+(Vtas(i)*sind(heading(i))*cosd(gamma(i)))*dt;
     
     % Break condition
     if abs(h(i+1) - 30000) < 10 
@@ -225,6 +224,7 @@ while true
     
 end
 t(i+1) = t(i) + dt;
+A=heading(i);
 %i=i+1;
 %Loiter 360
 display(t(i))
@@ -253,11 +253,11 @@ while true
     Vtas(i+1) =  Vtas(i);
     h(i+1) = h(i) + (Vtas(i) * (sind(gamma(i)) / 0.3048)) * dt;
     mass(i+1) = mass(i) - (F/60) * dt;
-    x(i+1)=x(i)+(Vtas(i)*cosd(0)*cosd(gamma(i)))*dt;
+    x(i+1)=x(i)+(Vtas(i)*cosd(heading(i))*cosd(gamma(i)))*dt;
     %heading(i + 1) = heading(i) +((tand(bank(i))*9.81/Vtas(i)))*dt;
     heading(i+1)=heading(i)-((Cl*rho*0.5*S*Vtas(i))/mass(i))*sind(bank(i))*57.3*dt;
     y(i+1)=y(i)+(Vtas(i)*sind(heading(i))*cosd(gamma(i)))*dt;
-    if abs(heading(i+1)) > 359
+    if abs(A-heading(i+1)) > 359
         break
     else
         t(i+1) = t(i) + dt;
@@ -271,8 +271,8 @@ display(t(i))
 while true
     bank(i)=0;
     gamma(i)=-2.9 ;% deg
-    heading(i)=0;
-    y(i)=0;
+    heading(i+1)=heading(i);
+    y(i+1)=y(i)+(Vtas(i)*sind(heading(i))*cosd(gamma(i)))*dt;
     % Calculate Atmosphere
     [T,P,rho,a]=atm_model(h(i)*0.3048,0);
     cas=Tas_to_Cas(Vtas(i),h(i)*0.3048);
@@ -296,7 +296,7 @@ while true
     Vtas(i+1) =  Vtas(i) + ((Thrust(i)-Drag(i))/(mass(i)) - 9.81 * sind(gamma(i))) * dt;
     h(i+1) = h(i) + (Vtas(i) * (sind(gamma(i)) / 0.3048)) * dt;
     mass(i+1) = mass(i) - (F/60) * dt;
-    x(i+1)=x(i)+(Vtas(i)*cosd(0)*cosd(gamma(i)))*dt;
+    x(i+1)=x(i)+(Vtas(i)*cosd(heading(i))*cosd(gamma(i)))*dt;
     
     % Break condition
     if abs(h(i+1) - 26000) < 10
@@ -317,7 +317,7 @@ t=t./60; %Converting seconds to minutes
 
 %Constructing graphics needed
 figure;plot(t,Vtas,'color','b');ylabel("V_tas(m/s)");xlabel("time(min)");grid on;title("\fontsize{14}V_{tas}-Time Graph",'Interpreter', 'tex');
-figure;plot(t(1:length(t)-1),heading,'color','m');ylabel("Heading Angle(deg)");xlabel("time(min)");grid on;title("\fontsize{14}Heading Angle-Time Graph");
+figure;plot(t,heading,'color','m');ylabel("Heading Angle(deg)");xlabel("time(min)");grid on;title("\fontsize{14}Heading Angle-Time Graph");
 figure;plot(t,mass,'color','m');ylabel("mass(kg)");xlabel("time(min)");grid on;title("\fontsize{14}Mass-Time Graph");
 figure;plot(t(1:length(t)-1),Thrust,'color','m');ylabel("Thrust(N)");xlabel("time(min)");grid on;title("\fontsize{14}Thrust-Time Graph");
 figure;plot(t(1:length(t)-1),gamma,'color','m');ylabel("Flight Path Angle (deg)");xlabel("time(min)");grid on;title("\fontsize{14}Flight Path Angle-Time Graph");
